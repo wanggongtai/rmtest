@@ -1,0 +1,136 @@
+<script type="text/javascript">
+    var gk_fileData = {};
+    function loadFileData(filename) {
+      return gk_fileData[filename] || "";
+    }
+    </script><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Regional Trade Analysis Report</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prop-types/15.8.1/prop-types.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+  <script src="https://unpkg.com/papaparse@latest/papaparse.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.15.0/Recharts.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body className="bg-gray-100 font-sans">
+  <div id="root"></div>
+  <script type="text/babel">
+    const { createRoot } = ReactDOM;
+    const { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } = Recharts;
+
+    // Data for charts (since we can't load CSV directly, using provided data)
+    const anzcertaData = [
+      { year: 1960, IR: 5.7, RI: 2.4 },
+      { year: 1970, IR: 6.1, RI: 2.1 },
+      { year: 1985, IR: 7.0, RI: 1.6 },
+      { year: 1990, IR: 7.6, RI: 1.6 },
+      { year: 1995, IR: 9.73, RI: 1.43 },
+      { year: 2000, IR: 8.44, RI: 1.22 },
+      { year: 2005, IR: 9.01, RI: 1.25 },
+      { year: 2010, IR: 18.92, RI: 0.52 },
+      { year: 2015, IR: 5.45, RI: 1.38 },
+    ];
+
+    const cufstaData = [
+      { year: 1985, IR: 38.0, RI: 16.7 },
+      { year: 1990, IR: 34.0, RI: 15.8 },
+      { year: 1995, IR: 35.84, RI: 16.53 },
+      { year: 2000, IR: 39.71, RI: 16.83 },
+      { year: 2005, IR: 40.75, RI: 12.39 },
+      { year: 2010, IR: 50.85, RI: 7.1 },
+      { year: 2015, IR: 31.1, RI: 11.83 },
+    ];
+
+    const andeanData = [
+      { year: 1960, IR: 0.7, RI: 2.9 },
+      { year: 1970, IR: 2.0, RI: 1.6 },
+      { year: 1985, IR: 3.4, RI: 1.2 },
+      { year: 1990, IR: 4.6, RI: 0.9 },
+      { year: 1995, IR: 8.51, RI: 0.45 },
+      { year: 2000, IR: 7.84, RI: 0.41 },
+      { year: 2005, IR: 8.88, RI: 0.5 },
+      { year: 2010, IR: 7.97, RI: 0.69 },
+      { year: 2015, IR: 8.14, RI: 0.62 },
+    ];
+
+    const App = () => {
+      return (
+        <div className="container mx-auto p-6 bg-white shadow-lg rounded-lg">
+          <h1 className="text-3xl font-bold mb-4 text-center">Regional Trade Analysis Report</h1>
+          
+          <section className="mb-8">
+            <h2 className="text-2xl font-semibold mb-2">Summary</h2>
+            <p className="text-gray-700">
+              This report analyzes trade data from three regional trade agreements: ANZCERTA (Australia-New Zealand), CUFSTA (Canada-US), and the Andean Pact (South America). It explores how intra-regional trade shares (IR) and global export shares (RI) have changed over time, revealing patterns of increased regional integration alongside declining global export shares. An interesting fact: the Andean Pact's intra-regional trade share surged dramatically after its 1993 Free Trade Zone, highlighting the power of policy changes.
+            </p>
+          </section>
+
+          <section className="mb-8">
+            <h2 className="text-2xl font-semibold mb-2">Visualizations</h2>
+            
+            <div className="mb-6">
+              <h3 className="text-xl font-medium mb-2">ANZCERTA Trade Trends</h3>
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={anzcertaData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="year" label={{ value: 'Year', position: 'insideBottom', offset: -5, fontSize: 12 }} />
+                  <YAxis label={{ value: 'Percentage (%)', angle: -90, position: 'insideLeft', fontSize: 12 }} />
+                  <Tooltip />
+                  <Legend />
+                  <Line type="monotone" dataKey="IR" stroke="#8884d8" name="Intra-Regional Share" />
+                  <Line type="monotone" dataKey="RI" stroke="#82ca9d" name="Global Export Share" />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="mb-6">
+              <h3 className="text-xl font-medium mb-2">CUFSTA Trade Trends</h3>
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={cufstaData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="year" label={{ value: 'Year', position: 'insideBottom', offset: -5, fontSize: 12 }} />
+                  <YAxis label={{ value: 'Percentage (%)', angle: -90, position: 'insideLeft', fontSize: 12 }} />
+                  <Tooltip />
+                  <Legend />
+                  <Line type="monotone" dataKey="IR" stroke="#8884d8" name="Intra-Regional Share" />
+                  <Line type="monotone" dataKey="RI" stroke="#82ca9d" name="Global Export Share" />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="mb-6">
+              <h3 className="text-xl font-medium mb-2">Andean Pact Trade Trends</h3>
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={andeanData} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="year" label={{ value: 'Year', position: 'insideBottom', offset: -5, fontSize: 12 }} />
+                  <YAxis label={{ value: 'Percentage (%)', angle: -90, position: 'insideLeft', fontSize: 12 }} />
+                  <Tooltip />
+                  <Legend />
+                  <Line type="monotone" dataKey="IR" stroke="#8884d8" name="Intra-Regional Share" />
+                  <Line type="monotone" dataKey="RI" stroke="#82ca9d" name="Global Export Share" />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </section>
+
+          <section className="mb-8">
+            <h2 className="text-2xl font-semibold mb-2">Conclusion</h2>
+            <p className="text-gray-700">
+              The data suggests that regional trade agreements boost intra-regional trade, as seen in the Andean pact's surge and CUFSTA's peak in 2010. However, global export shares have generally declined, possibly due to rising competition from other regions. Policymakers should balance regional integration with global competitiveness.
+            </p>
+          </section>
+        </div>
+      );
+    };
+
+    const root = createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
